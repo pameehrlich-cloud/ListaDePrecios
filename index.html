@@ -490,23 +490,18 @@ function render(){
     shown += items.length;
     const catPack = CATS[cat].pack;
     const colLabel = cat === 'madera' ? 'Precio unitario' : 'Con diseño';
-    const liLabel = cat === 'madera' ? '' : 'Liso';
     html += `<div class="category-title">${CATS[cat].label}</div>
 <table class="pt"><thead><tr>
-  <th style="width:38%">Producto</th>
-  <th class="r" style="width:16%">${colLabel}</th>
-  <th class="r" style="width:16%">${liLabel}</th>
-  <th class="r" style="width:16%">Cant.</th>
-  <th style="width:14%">Colección / nota</th>
+  <th style="width:44%">Producto</th>
+  <th class="r" style="width:20%">${colLabel}</th>
+  <th class="r" style="width:18%">Cant.</th>
+  <th style="width:18%">Colección / nota</th>
 </tr></thead><tbody>`;
 
     items.forEach(p => {
       const itemPack = (cat === 'complementos' && COMP_X12.includes(p.n)) ? 12 : catPack;
       const packNote = (cat === 'complementos' && itemPack !== catPack)
         ? ` <span style="font-size:10px;color:#aaa">x${itemPack}</span>` : '';
-      const lp = (cat === 'madera' || !p.li)
-        ? `<td class="pe">—</td>`
-        : `<td class="pc">${fmt(p.li.p)}</td>`;
       const imgHtml = p.img ? `<img src="${getImg(p.img)}" alt="${p.n}" style="width:56px;height:56px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:8px;">` : '';
       const nameHtml = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #e5e5e5;">${p.n}${packNote}</a>` : `${p.n}${packNote}`;
 
@@ -519,7 +514,6 @@ function render(){
       html += `<tr>
         <td class="nm">${imgHtml}${nameHtml}</td>
         <td class="pc">${fmt(p.ca.p)}</td>
-        ${lp}
         <td class="qty-cell">
           <div class="qty-wrap">
             <button class="qty-btn" onclick="cambiarQty('${key.replace(/'/g,"\\'")}', -1)">−</button>
