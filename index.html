@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOKEN — Lista de precios mayoristas</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Georgia', serif; background: #faf8f5; color: #2c2c2a; }
+.hero { background: #2c2c2a; color: #faf8f5; padding: 48px 32px 40px; text-align: center; }
+.hero .brand { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: #888; margin-bottom: 12px; }
+.hero h1 { font-size: 32px; font-weight: 400; letter-spacing: 0.04em; margin-bottom: 8px; }
+.hero .subtitle { font-size: 14px; color: #aaa; letter-spacing: 0.06em; }
+.banner { background: #b5d4f4; color: #042c53; text-align: center; padding: 14px 20px; font-size: 14px; }
+.banner strong { font-weight: 600; }
+.search-bar { max-width: 640px; margin: 28px auto 0; padding: 0 20px; }
+.search-bar input { width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: #fff; color: #2c2c2a; outline: none; font-family: inherit; }
+.search-bar input:focus { border-color: #888; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; max-width: 960px; margin: 16px auto 0; padding: 0 20px; }
+.filter-btn { padding: 6px 14px; font-size: 12px; border: 1px solid #ccc; border-radius: 20px; background: #fff; cursor: pointer; letter-spacing: 0.04em; transition: all 0.15s; font-family: inherit; }
+.filter-btn:hover, .filter-btn.active { background: #2c2c2a; color: #fff; border-color: #2c2c2a; }
+.container { max-width: 960px; margin: 0 auto; padding: 24px 20px 60px; }
+.category-title { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #888; margin: 36px 0 14px; padding-bottom: 8px; border-bottom: 1px solid #e5e5e5; }
+table.pt { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.pt thead tr { border-bottom: 1px solid #e0ddd8; }
+table.pt thead th { text-align: left; padding: 8px 10px; font-size: 11px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; }
+table.pt thead th.r { text-align: right; }
+table.pt tbody tr { border-bottom: 1px solid #f0ede8; transition: background 0.1s; }
+table.pt tbody tr:hover { background: #f5f3ef; }
+table.pt td { padding: 11px 10px; vertical-align: middle; }
+td.nm { color: #2c2c2a; }
+td.cd { color: #c0bdb8; font-size: 11px; letter-spacing: 0.05em; white-space: nowrap; }
+td.pc { text-align: right; font-size: 15px; font-weight: 500; color: #2c2c2a; white-space: nowrap; }
+td.pe { text-align: right; color: #ddd; font-size: 14px; }
+td.pack-note { font-size: 11px; color: #aaa; padding-left: 4px; }
+.no-results { text-align: center; color: #aaa; padding: 60px 20px; font-size: 14px; }
+footer { text-align: center; padding: 32px 20px; font-size: 12px; color: #aaa; border-top: 1px solid #ebe9e4; }
+footer a { color: #666; text-decoration: none; }
+
+/* PEDIDO */
+.qty-cell { white-space: nowrap; text-align: center; }
+.qty-wrap { display: inline-flex; align-items: center; gap: 4px; }
+.qty-btn { width: 24px; height: 24px; border: 1px solid #ccc; background: #fff; border-radius: 4px; cursor: pointer; font-size: 14px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background 0.1s; }
+.qty-btn:hover { background: #2c2c2a; color: #fff; border-color: #2c2c2a; }
+.qty-val { min-width: 28px; text-align: center; font-size: 14px; font-weight: 500; }
+.nota-input { width: 100%; font-size: 12px; font-family: inherit; border: none; border-bottom: 1px solid #e5e5e5; background: transparent; color: #666; padding: 2px 0; outline: none; }
+.nota-input:focus { border-bottom-color: #888; }
+.nota-input::placeholder { color: #ccc; }
+
+/* CARRITO FLOTANTE */
+#carrito-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #2c2c2a; color: #faf8f5;
+  padding: 16px 24px; display: none; align-items: center; justify-content: space-between;
+  z-index: 100; box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+}
+#carrito-bar.visible { display: flex; }
+#carrito-info { font-size: 14px; }
+#carrito-info strong { font-size: 16px; }
+.btn-pedido {
+  background: #fff; color: #2c2c2a; border: none; padding: 10px 22px;
+  border-radius: 6px; font-size: 14px; font-family: inherit; cursor: pointer;
+  font-weight: 600; letter-spacing: 0.02em; transition: background 0.15s;
+}
+.btn-pedido:hover { background: #e8e5e0; }
+.btn-limpiar { background: transparent; color: #aaa; border: 1px solid #555; padding: 10px 14px; border-radius: 6px; font-size: 12px; font-family: inherit; cursor: pointer; margin-right: 8px; }
+.btn-limpiar:hover { color: #fff; border-color: #aaa; }
+
+/* MODAL */
+#modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; align-items:center; justify-content:center; }
+#modal-overlay.visible { display:flex; }
+#modal { background:#fff; border-radius:10px; padding:32px; max-width:480px; width:90%; max-height:80vh; overflow-y:auto; }
+#modal h2 { font-size:18px; font-weight:400; margin-bottom:6px; }
+#modal p { font-size:13px; color:#888; margin-bottom:20px; }
+.modal-field { margin-bottom:14px; }
+.modal-field label { display:block; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#aaa; margin-bottom:6px; }
+.modal-field input { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:6px; font-size:14px; font-family:inherit; outline:none; }
+.modal-field input:focus { border-color:#888; }
+.modal-actions { display:flex; gap:10px; margin-top:20px; }
+.btn-enviar { flex:1; background:#2c2c2a; color:#fff; border:none; padding:12px; border-radius:6px; font-size:14px; font-family:inherit; cursor:pointer; font-weight:600; }
+.btn-enviar:hover { background:#444; }
+.btn-cancelar { background:#fff; color:#888; border:1px solid #ddd; padding:12px 16px; border-radius:6px; font-size:14px; font-family:inherit; cursor:pointer; }
+#resumen-pedido { background:#faf8f5; border-radius:6px; padding:14px; margin-bottom:16px; font-size:13px; max-height:200px; overflow-y:auto; }
+#resumen-pedido div { padding: 4px 0; border-bottom:1px solid #eee; }
+#resumen-pedido div:last-child { border-bottom:none; }
+.estado-envio { text-align:center; padding:12px; font-size:13px; color:#666; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="brand">KOKEN · Lista exclusiva mayoristas</div>
+  <h1>Lista de Precios</h1>
+  <div class="subtitle">Precio unitario por pieza · Cerámica apta microondas</div>
+</div>
+<div class="banner">Únicamente en efectivo o transferencia</div>
+
+<div class="search-bar"><input type="text" id="si" placeholder="Buscar producto o código..." oninput="render()"></div>
+<div class="filters">
+  <button class="filter-btn active" onclick="sc('todos',this)">Todos</button>
+  <button class="filter-btn" onclick="sc('mates',this)">Mates</button>
+  <button class="filter-btn" onclick="sc('tazas',this)">Tazas</button>
+  <button class="filter-btn" onclick="sc('bowls',this)">Bowls & Cazuelas</button>
+  <button class="filter-btn" onclick="sc('platos',this)">Platos</button>
+  <button class="filter-btn" onclick="sc('fuentes',this)">Fuentes</button>
+  <button class="filter-btn" onclick="sc('teteras',this)">Teteras</button>
+  <button class="filter-btn" onclick="sc('vidrio',this)">Vidrio</button>
+  <button class="filter-btn" onclick="sc('madera',this)">Madera</button>
+  <button class="filter-btn" onclick="sc('complementos',this)">Complementos</button>
+</div>
+<div class="container" id="pc"></div>
+
+<!-- Barra carrito -->
+<div id="carrito-bar">
+  <div id="carrito-info">
+    <strong id="carrito-count">0 productos</strong><br>
+    <span id="carrito-total"></span>
+  </div>
+  <div>
+    <button class="btn-limpiar" onclick="limpiarPedido()">Limpiar</button>
+    <button class="btn-pedido" onclick="abrirModal()">📦 Enviar pedido</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal-overlay">
+  <div id="modal">
+    <h2>Confirmar pedido</h2>
+    <p>Revisá tu pedido y completá tus datos para enviarlo.</p>
+    <div id="resumen-pedido"></div>
+    <div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#aaa;margin-bottom:10px;margin-top:4px;">Datos del cliente</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="modal-field">
+        <label>DNI o CUIT</label>
+        <input type="text" id="campo-dni" placeholder="Ej: 20-12345678-9">
+      </div>
+      <div class="modal-field">
+        <label>Teléfono</label>
+        <input type="tel" id="campo-tel" placeholder="Ej: 11 1234-5678" required>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Nombre y Apellido</label>
+      <input type="text" id="campo-nombre" placeholder="Ej: María García" required>
+    </div>
+    <div class="modal-field">
+      <label>Mail</label>
+      <input type="email" id="campo-mail" placeholder="Ej: maria@tienda.com" required>
+    </div>
+
+    <div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#aaa;margin-bottom:10px;margin-top:18px;">Datos de envío</div>
+    <div class="modal-field">
+      <label>Provincia</label>
+      <select id="campo-provincia" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit;outline:none;background:#fff;color:#2c2c2a;">
+        <option value="">Seleccioná una provincia</option>
+        <option>Buenos Aires</option>
+        <option>CABA</option>
+        <option>Catamarca</option>
+        <option>Chaco</option>
+        <option>Chubut</option>
+        <option>Córdoba</option>
+        <option>Corrientes</option>
+        <option>Entre Ríos</option>
+        <option>Formosa</option>
+        <option>Jujuy</option>
+        <option>La Pampa</option>
+        <option>La Rioja</option>
+        <option>Mendoza</option>
+        <option>Misiones</option>
+        <option>Neuquén</option>
+        <option>Río Negro</option>
+        <option>Salta</option>
+        <option>San Juan</option>
+        <option>San Luis</option>
+        <option>Santa Cruz</option>
+        <option>Santa Fe</option>
+        <option>Santiago del Estero</option>
+        <option>Tierra del Fuego</option>
+        <option>Tucumán</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Dirección</label>
+      <input type="text" id="campo-direccion" placeholder="Calle, número, piso/depto">
+    </div>
+    <div class="modal-field" style="max-width:160px;">
+      <label>Código Postal</label>
+      <input type="text" id="campo-cp" placeholder="Ej: 1425">
+    </div>
+
+    <div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#aaa;margin-bottom:10px;margin-top:18px;">Transporte</div>
+    <div class="modal-field">
+      <label>Transporte preferido</label>
+      <input type="text" id="campo-transporte" placeholder="Ej: OCA, Andreani, retiro en showroom...">
+    </div>
+    <div id="estado-envio" class="estado-envio" style="display:none"></div>
+    <div class="modal-actions">
+      <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn-enviar" onclick="enviarPedido()">Enviar por WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<footer>Precios en pesos argentinos · IVA no incluido · Factura A · <a href="https://wa.me/5491172428310">Consultas por WhatsApp</a></footer>
+
+<!-- imgs-ocultas -->
+<div style="display:none">
+<img id="img-copa-vino" src="https://i.imgur.com/gMnbcj4.webp" style="display:none">
+<img id="img-copa-champ" src="https://i.imgur.com/WZK20J3.webp" style="display:none">
+<img id="img-copon" src="https://i.imgur.com/Shojhe9.webp">
+<img id="img-vasospa" src="https://i.imgur.com/W9VwFlh.webp">
+<img id="img-deep" src="https://i.imgur.com/fdyluEF.webp">
+<img id="img-bowls" src="https://i.imgur.com/jfECy7Q.webp">
+</div>
+
+<script>
+// ── GOOGLE SHEETS ── Pegá acá la URL de tu Apps Script Web App
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw582p7pR3fP1WPwZHISqJvUkUjF2Ov_Hj2c7NGEdbH6cQjenfnc01NLBmdojj5K3qZ7Q/exec';
+
+function getImg(src) {
+  if (!src) return '';
+  if (src.startsWith('preimg-') || src.startsWith('img-')) {
+    const el = document.getElementById(src);
+    return el ? el.src : '';
+  }
+  return src;
+}
+
+const P = [
+  // MATES
+  {n:"Taza Cónica",c:"tazas",ca:{cod:"16",p:7100},li:{cod:"16-L",p:3500},img:"https://i.imgur.com/uFkHOzJ.webp",url:"https://koken-art.com/productos/taza-conica-combina-disenos-y-cantidad-libre-loyr2/"},
+  {n:"Mate Prisma",c:"mates",ca:{cod:"20",p:6400},li:{cod:"20-L",p:3500},img:"https://drive.google.com/thumbnail?id=1fI1y-OxwHb_8EXXApvN-CB3H5EkYLTSA&sz=w400",url:"https://koken-art.com/productos/mates-prisma-combina-disenos-y-cantidad-libre-zpeli/"},
+  {n:"Mate Diamante",c:"mates",ca:{cod:"23",p:6400},li:{cod:"23-L",p:3500},img:"https://i.imgur.com/VG6kYKK.webp",url:"https://koken-art.com/productos/mates-diamante-combina-disenos-y-cantidad-libre-z80wd/"},
+  {n:"Mate con Asa",c:"mates",ca:{cod:"21",p:6400},li:{cod:"21-L",p:3500},img:"https://i.imgur.com/dBO0l7b.webp"},
+  {n:"Mate Ovo",c:"mates",ca:{cod:"22",p:6400},li:{cod:"22 L",p:3500},img:"https://drive.google.com/thumbnail?id=1FttbSehr3rpAfBHagOBp8aKA6eEZOx5i&sz=w400"},
+  {n:"Mate Burbuja",c:"mates",ca:{cod:"36",p:6400},li:{cod:"36-L",p:3500},img:"https://i.imgur.com/V0MNDgg.webp"},
+  // TAZAS
+  {n:"Taza Trapecio",c:"tazas",ca:{cod:"13",p:7500},li:{cod:"13 L",p:6900},img:"https://i.imgur.com/7iNwmis.webp",url:"https://koken-art.com/productos/taza-trapecio-combina-disenos-y-cantidad-kj3km/"},
+  {n:"Taza de Café",c:"tazas",ca:{cod:"4",p:5900},li:{cod:"4 L",p:3700},img:"https://i.imgur.com/Sovprw9.webp"},
+  {n:"Taza de Café Trapecio",c:"tazas",ca:{cod:"14",p:5800},li:{cod:"14 L",p:5800},img:"https://i.imgur.com/jHPSygC.webp",url:"https://koken-art.com/productos/taza-de-cafe-trapecio-sin-plato-combina-disenos-y-cantidad-libre-pynr1/"},
+  {n:"Taza Selva",c:"tazas",ca:{cod:"34",p:8000},li:{cod:"34-L",p:5500},img:"https://i.imgur.com/4aZ5IkA.webp",url:"https://koken-art.com/productos/jarros-chocolateros-flor-copia-6fcvz/"},
+  {n:"Taza Flor",c:"tazas",ca:{cod:"38",p:8600},li:null,img:"https://drive.google.com/thumbnail?id=1MSjcx3IPJj21i_AFxVGL0iXpZmVphb0W&sz=w400",url:"https://koken-art.com/productos/taza-de-te-flor-rh1kx/"},
+  {n:"Taza Café con Leche 350cc",c:"tazas",ca:{cod:"972",p:8300},li:{cod:"972-L",p:5800},img:"https://i.imgur.com/8HIs9ej.webp"},
+  {n:"Taza de Té Apilable",c:"tazas",ca:{cod:"982",p:9400},li:{cod:"982-L",p:5800},img:"https://i.imgur.com/9mNGt8p.webp",url:"https://koken-art.com/productos/tazas-apilables-combina-disenos-y-cantidad-yuw8g/"},
+  {n:"Taza de Té",c:"tazas",ca:{cod:"03",p:8000},li:null,img:"https://i.imgur.com/836S0sS.webp",url:"https://koken-art.com/productos/tazas-de-te-sin-plato-combina-disenos-y-cantidad-libre-fmlt5/"},
+  {n:"Taza de Café Apilable",c:"tazas",ca:{cod:"980",p:9100},li:{cod:"980-L",p:5300},img:"https://i.imgur.com/qbIyrIS.webp"},
+  {n:"Taza Recta",c:"tazas",ca:{cod:"18",p:8700},li:{cod:"18-L",p:6100},img:"https://i.imgur.com/w1w2ZRy.webp",url:"https://koken-art.com/productos/tazas-rectas-combina-disenos-y-cantidad-fwa5v/"},
+  {n:"Jarro Chocolatero",c:"tazas",ca:{cod:"1",p:9000},li:{cod:"1-L",p:8700},img:"https://i.imgur.com/aUIhmuD.webp",url:"https://koken-art.com/productos/jarros-combina-disenos-y-cantidad-zn4pf/"},
+  {n:"Taza Tradicional",c:"tazas",ca:{cod:"15",p:8600},li:{cod:"15-L",p:8900},img:"https://drive.google.com/thumbnail?id=1NQDrVTZvyszRt_5Bmswlfj86GyuxojvH&sz=w400",url:"https://koken-art.com/productos/taza-combina-disenos-y-cantidad-libre-nwjns/"},
+  // BOWLS
+  {n:"Bowl Redondo Chico",c:"bowls",ca:{cod:"921",p:8200},li:{cod:"921-L",p:8700},img:"https://i.imgur.com/QxJtK1h.webp",url:"https://koken-art.com/productos/bowls-combina-disenos-y-cantidad-f7p7x/"},
+  {n:"Bowl Redondo Grande",c:"bowls",ca:{cod:"1107",p:17900},li:{cod:"1107-L",p:12400},img:"https://i.imgur.com/aIEHHds.webp",url:"https://koken-art.com/productos/ensaladeras-combina-disenos-y-cantidad-18n58/"},
+  {n:"Deep",c:"bowls",ca:{cod:"205",p:5200},li:{cod:"205-L",p:3800},img:"https://i.imgur.com/fdyluEF.webp"},
+  {n:"Tazón",c:"tazas",ca:{cod:"923",p:10500},li:{cod:"923 L",p:9400},img:"https://i.imgur.com/aIDiaBe.webp",url:"https://koken-art.com/productos/tazon-combina-disenos-y-cantidad-libre-assrh/"},
+  {n:"Bowls Apilable",c:"bowls",ca:{cod:"983",p:8800},li:{cod:"983-L",p:4500},img:"https://i.imgur.com/jfECy7Q.webp"},
+  {n:"Bowl Oct Grande",c:"bowls",ca:{cod:"2002",p:23400},li:{cod:"2002-L",p:17800},img:"https://drive.google.com/thumbnail?id=1TmjOzFVkV5pgjO7xsVEe4A3ax2ng4qxk&sz=w400"},
+  {n:"Bowl Oct Chico",c:"bowls",ca:{cod:"2003",p:11200},li:{cod:"2003-L",p:7900},img:"https://i.imgur.com/rLnYVB0.webp",url:"https://koken-art.com/productos/bowl-octogonal-combina-disenos-y-cantidad-libre-zy5gd/"},
+  {n:"Cazuela Individual",c:"bowls",ca:{cod:"201",p:10600},li:{cod:"201-L",p:11300},img:"https://i.imgur.com/9eDTmdk.webp",url:"https://koken-art.com/productos/deeps-17omm/"},
+  {n:"Cazuela Diamante Ch",c:"bowls",ca:{cod:"202",p:8000},li:{cod:"202-L",p:4000},img:"https://drive.google.com/thumbnail?id=1bggPwCGzZy6tPfKU7nYukFXcm5EXC_O8&sz=w400"},
+  {n:"Cazuela Diamante Md",c:"bowls",ca:{cod:"203",p:8600},li:{cod:"203-L",p:5200},img:"https://drive.google.com/thumbnail?id=1JC18pn8nth35NUT8lUqFBQ3T3Qnoeoo-&sz=w400"},
+  {n:"Cazuela Diamante Gr",c:"bowls",ca:{cod:"204",p:12800},li:{cod:"204-L",p:8200},img:"https://drive.google.com/thumbnail?id=1REB1naKJIfi8QdEJZV7cgrtFRTSj1p3Jl&sz=w400",url:"https://koken-art.com/productos/cazuela-diamante-grande-combina-disenos-y-cantidad-libre-z06k5/"},
+  {n:"Cazuela Grande Redonda",c:"bowls",ca:{cod:"35",p:10100},li:{cod:"35-L",p:5800},img:"https://drive.google.com/thumbnail?id=1nt7-vt148b4o7TxzRmArEBrYh8qWpVJq&sz=w400"},
+  // PLATOS
+  {n:"Plato Redondo Playo",c:"platos",ca:{cod:"806",p:16200},li:{cod:"806 L",p:14900},img:"https://i.imgur.com/qLtYPvp.webp",url:"https://koken-art.com/productos/platos-playos-combina-disenos-y-cantidad-libre-8naac/"},
+  {n:"Plato Redondo Hondo",c:"platos",ca:{cod:"807",p:12800},li:{cod:"807 L",p:14600},img:"https://i.imgur.com/vfDIQpt.webp",url:"https://koken-art.com/productos/plato-hondo-combina-disenos-y-cantidad-i2ve9/"},
+  {n:"Plato Redondo Postre",c:"platos",ca:{cod:"808",p:10900},li:{cod:"808 L",p:11000},img:"https://i.imgur.com/X9mV41p.webp",url:"https://koken-art.com/productos/plato-postre-combina-disenos-y-cantidad-libre-s2gas/"},
+  {n:"Plato Cuadrado Chico",c:"platos",ca:{cod:"801",p:13700},li:{cod:"801 L",p:14800},img:"https://i.imgur.com/VdS62ng.webp",url:"https://koken-art.com/productos/platos-cuadrados-grandes-combina-disenos-y-cantidad-gwfqx/"},
+  {n:"Plato Cuadrado Grande",c:"platos",ca:{cod:"800",p:15200},li:{cod:"800 L",p:9800},img:"https://i.imgur.com/z4mVl1S.webp",url:"https://koken-art.com/productos/platos-cuadrados-ch-combina-disenos-y-cantidad-5qhp3/"},
+  {n:"Plato Rectangular",c:"platos",ca:{cod:"803",p:13000},li:{cod:"803 L",p:13800},img:"https://i.imgur.com/SnZaX46.webp",url:"https://koken-art.com/productos/fuente-rectangular-chica-golden-nest/"},
+  {n:"Plato Oct",c:"platos",ca:{cod:"2001",p:18800},li:{cod:"2001-L",p:14100},img:"https://i.imgur.com/Ca4vbQs.webp",url:"https://koken-art.com/productos/plato-octogonal-combina-disenos-y-cantidad-libre-4kurf/"},
+  {n:"Plato de Taza",c:"platos",ca:{cod:"03/PL",p:14600},li:{cod:"03/PL L",p:4200},img:"https://i.imgur.com/wz7D71r.webp",url:"https://koken-art.com/productos/platos-de-te-combina-disenos-y-cantidad-qvgtr/"},
+  {n:"Plato de Café",c:"platos",ca:{cod:"4 PL",p:6100},li:{cod:"04/pl-L",p:6000},img:"https://i.imgur.com/F0Zs6Ro.webp",url:"https://koken-art.com/productos/plato-de-cafe-combina-disenos-y-cantidad-libre-54xfi/"},
+  {n:"Plato Desayuno",c:"platos",ca:{cod:"916",p:9100},li:{cod:"916-L",p:5200},img:"https://i.imgur.com/HS5IX3d.webp",url:"https://koken-art.com/productos/plato-desayuno-combina-disenos-y-cantidad-7zr3b/"},
+  {n:"Plato Gota",c:"platos",ca:{cod:"717",p:10100},li:null,img:"https://i.imgur.com/VZIZenI.webp",url:"https://koken-art.com/productos/plato-gota-combina-disenos-y-cantidad-0ywu9/"},
+  {n:"Plato Corazón Grande",c:"platos",ca:{cod:"715",p:10200},li:{cod:"715-L",p:11300},img:"https://drive.google.com/thumbnail?id=177MnLP_KoGOWmxr8akh_NcMO-3u8AF_J&sz=w400"},
+  {n:"Plato Corazón Mediano",c:"platos",ca:{cod:"715 M",p:12500},li:null,img:"https://i.imgur.com/uYmj0K9.webp",url:"https://koken-art.com/productos/plato-corazon-chico-combina-disenos-y-cantidad-libre-yk5uz/"},
+  {n:"Plato Tostada",c:"platos",ca:{cod:"716",p:8700},li:{cod:"716 L",p:8900},img:"https://drive.google.com/thumbnail?id=1BkzXBaMXHxbY0EQI-_BAxy1-BDm-BVXR&sz=w400",url:"https://koken-art.com/productos/platos-tostada-combina-disenos-y-cantidad-wfjjl/"},
+  {n:"Plato Oval",c:"platos",ca:{cod:"805",p:10700},li:{cod:"805-L",p:9700},img:"https://i.imgur.com/iNjIqAm.webp",url:"https://koken-art.com/productos/bandeja-oval-combina-disenos-y-cantidad-libre-zbu2y/"},
+  {n:"Plato Muffin",c:"platos",ca:{cod:"30",p:13100},li:{cod:"30-L",p:8800},img:"https://drive.google.com/thumbnail?id=1_Yi6fKqs0LLO3ayc9ej7o7TpipXbvXo-&sz=w400",url:"https://koken-art.com/productos/plato-gota-copia-17rp9/"},
+  {n:"Plato de Taza de Té Flor",c:"platos",ca:{cod:"38-pl",p:7500},li:null,img:"https://drive.google.com/thumbnail?id=1jWB1mAelT8xY5oEtuLWQHLz0baMocHrl&sz=w400"},
+  // FUENTES
+  {n:"Fte. Ovalada Chica",c:"fuentes",ca:{cod:"106/CH",p:22700},li:{cod:"106/CH-L",p:16500},img:"https://i.imgur.com/4eCGgMF.webp",url:"https://koken-art.com/productos/fuente-oval-combina-disenos-y-cantidad-x2wte/"},
+  {n:"Tartera Grande",c:"fuentes",ca:{cod:"120/GR",p:25200},li:{cod:"120/GR-L",p:20000},img:"https://drive.google.com/thumbnail?id=1rLmdt2L8YwKN2FDp3XXucdkToBNiQV64&sz=w400",url:"https://koken-art.com/productos/tarteras-grandes-combina-disenos-y-cantidad-libre-c7pb5/"},
+  {n:"Tartera Mediana",c:"fuentes",ca:{cod:"120/M",p:20100},li:{cod:"120/M-L",p:26300},img:"https://drive.google.com/thumbnail?id=1wNJ56yCPT7z_lqSQJDrMvIP3iUgrUib-&sz=w400",url:"https://koken-art.com/productos/tartera-mediana-combina-disenos-y-cantidad-kbdij/"},
+  {n:"Fuente Rectangular B. Ondulado Gr",c:"fuentes",ca:{cod:"118/GR",p:28300},li:{cod:"118/GR-L",p:18300},img:"https://drive.google.com/thumbnail?id=1ohzQLx4T8yCJf16JVRhtSVAi-hNOQQvI&sz=w400",url:"https://koken-art.com/productos/fuente-ondulada-grande-combina-disenos-y-cantidad-libre-kvdhu/"},
+  {n:"Fuente Rectangular B. Ondulado M",c:"fuentes",ca:{cod:"118/CH",p:23500},li:{cod:"118/CH-L",p:24900},img:"https://drive.google.com/thumbnail?id=1uXz-KklSzaNcHWb3DdHABwDyKHRiwfzm&sz=w400",url:"https://koken-art.com/productos/fuente-ondulada-mediana-combina-disenos-y-cantidad-libre-8bqe6/"},
+  {n:"Fuente Rectangular Grande",c:"fuentes",ca:{cod:"804",p:16200},li:{cod:"804 L",p:18000},img:"https://i.imgur.com/nP9TdCl.webp",url:"https://koken-art.com/productos/bandeja-rectangular-grande-combina-diseno-y-cantidad-enmck/"},
+  {n:"Bandeja Rectangular",c:"fuentes",ca:{cod:"803",p:13000},li:{cod:"803 L",p:13800},img:"https://i.imgur.com/SnZaX46.webp",url:"https://koken-art.com/productos/fuente-rectangular-chica-golden-nest/"},
+  {n:"Fuente Ondulada Oval",c:"fuentes",ca:{cod:"1009",p:12300},li:{cod:"1009-L",p:10400},img:"https://drive.google.com/thumbnail?id=18TjDxYVbBL81Ok5RGPIjvST2MI3wmTMH&sz=w400"},
+  // TETERAS
+  {n:"Tetera 500ml",c:"teteras",ca:{cod:"9",p:21100},li:{cod:"9-L",p:13400},img:"https://i.imgur.com/ooYpE5E.webp"},
+  {n:"Tetera Grande",c:"teteras",ca:{cod:"10",p:24800},li:{cod:"10 L",p:29200},img:"https://drive.google.com/thumbnail?id=1g05shHRcXL_ECbEi92iHHzbC2Iuc_DJl&sz=w400",url:"https://koken-art.com/productos/tetera-combina-disenos-y-cantidad-u6yhc/"},
+  {n:"Tetera dos en uno (tazón + tetera)",c:"teteras",ca:{cod:"11",p:24000},li:{cod:"11 L",p:14000},img:"https://i.imgur.com/kSPCbOZ.webp",url:"https://koken-art.com/productos/tetera-dos-en-uno-combina-disenos-y-cantidad-libre-ydhxv/"},
+  // VIDRIO
+  {n:"Copa Agua",c:"vidrio",ca:{cod:"7056",p:4800},li:{cod:"7056-L",p:3600},url:"https://koken-art.com/productos/copa-vino-385-cc-jungle/",img:"img-copa-vino"},
+  {n:"Copa Vino",c:"vidrio",ca:{cod:"7156",p:4100},li:{cod:"7156-L",p:2900},img:"img-copa-vino"},
+  {n:"Copa Cerveza",c:"vidrio",ca:{cod:"7651",p:5100},li:{cod:"7651-L",p:3900},url:"https://koken-art.com/productos/copa-cerveza-jungle-400-cc/",img:"https://i.imgur.com/5n88dPS.webp"},
+  {n:"Copa Champagne",c:"vidrio",ca:{cod:"7856",p:4500},li:{cod:"7856-L",p:3300},img:"img-copa-champ"},
+  {n:"Copón Gourmet Bombé",c:"vidrio",ca:{cod:"68871",p:3600},li:{cod:"68871-L",p:2300},img:"img-copon",url:"https://koken-art.com/productos/copon-gourmet-golden-blue-450-cc/"},
+  {n:"Vaso Spa",c:"vidrio",ca:{cod:"61243",p:3600},li:{cod:"61243-L",p:2300},img:"https://i.imgur.com/UMPXU9q.webp",url:"https://koken-art.com/productos/vaso-spa-peacook-425-cc/"},
+  {n:"Taza Doble Vidrio 150ml",c:"vidrio",ca:{cod:"1139",p:4100},li:{cod:"1139-L",p:3800},img:"https://i.imgur.com/RQdybH4.webp"},
+  {n:"Taza Doble Vidrio 250ml",c:"vidrio",ca:{cod:"1127",p:3900},li:{cod:"1127-L",p:11200},img:"https://drive.google.com/thumbnail?id=1yT1beNGxs8lmA4m7ksKIwiEALu3kPxIF&sz=w400"},
+  {n:"Vaso Doble Vidrio 80ml",c:"vidrio",ca:{cod:"1128",p:2900},li:{cod:"1128-L",p:2900},img:"https://drive.google.com/thumbnail?id=1-PUB4CWauhU9b2zac9TFXGCC1ivHEgAv&sz=w400"},
+  {n:"Vaso Doble con Wave Ch",c:"vidrio",ca:{cod:"9915",p:4500},li:null,img:"https://i.imgur.com/aEN7opI.webp"},
+  {n:"Vaso Doble con Wave Gr",c:"vidrio",ca:{cod:"9916",p:4500},li:null,img:"https://i.imgur.com/rVEqOXF.webp",url:"https://koken-art.com/productos/vaso-doble-vidrio-wave-gr/"},
+  {n:"Mug Ball Ámbar/Tornasol/Gris Humo",c:"vidrio",ca:{cod:"2801",p:3000},li:null,img:"https://drive.google.com/thumbnail?id=1qrz8IUJLoAxJ4SKZQuFg6kY4G7btWjrD&sz=w400"},
+  {n:"Mug Balls Black",c:"vidrio",ca:{cod:"2802",p:3000},li:null,img:"https://drive.google.com/thumbnail?id=1qrz8IUJLoAxJ4SKZQuFg6kY4G7btWjrD&sz=w400"},
+  {n:"Mug Balls Ámbar",c:"vidrio",ca:{cod:"2803",p:3000},li:null,img:"https://drive.google.com/thumbnail?id=1qrz8IUJLoAxJ4SKZQuFg6kY4G7btWjrD&sz=w400"},
+  // MADERA
+  {n:"Posa Vaso Corazón",c:"madera",pack:6,ca:{cod:"3922-1",p:5400},li:null,img:"https://drive.google.com/thumbnail?id=1Ikc2GXERV7ewPfuD5KNP6g-j7Lpf8BgB&sz=w400"},
+  {n:"Revolver Corazón",c:"madera",pack:6,ca:{cod:"7074-1",p:4900},li:null,img:"https://drive.google.com/thumbnail?id=1CQDnySVa_KO3sXKyCA2JCy3ZHLAvocqG&sz=w400"},
+  {n:"Tabla Amor",c:"madera",pack:6,ca:{cod:"7518-1",p:6900},li:null,img:"https://i.imgur.com/aC2Ar0j.webp",url:"https://koken-art.com/productos/tabla-amor-1gxh8/"},
+  {n:"Tabla Corazón",c:"madera",pack:6,ca:{cod:"8189-1",p:13200},li:null,img:"https://i.imgur.com/hpqNU7W.webp",url:"https://koken-art.com/productos/tabla-corazon-1berf/"},
+  {n:"Tabla de Madera Extra Large",c:"madera",pack:6,ca:{cod:"7696-1",p:12700},li:null,img:"https://i.imgur.com/3HMFT0C.webp",url:"https://koken-art.com/productos/tabla-londres-cuore-1w3ae/"},
+  {n:"Tabla Secreto",c:"madera",pack:6,ca:{cod:"7535-1",p:8000},li:null,img:"https://i.imgur.com/sTmEafi.webp",url:"https://koken-art.com/productos/tabla-secreto-ydtkn/"},
+  {n:"Bandeja de Madera",c:"madera",pack:6,ca:{cod:"586",p:11800},li:null,img:"https://drive.google.com/thumbnail?id=1TNseBWtK8niez7g1rPNOYOKu0d0f189m&sz=w400"},
+  // COMPLEMENTOS
+  {n:"Azucarera",c:"complementos",ca:{cod:"7",p:12700},li:{cod:"7-L",p:16200},img:"https://drive.google.com/thumbnail?id=11E04ov6_Chpz1SzB7NvFN4FZy3JDNn-6&sz=w400",url:"https://koken-art.com/productos/azucarera-combina-disenos-y-cantidad-libre-nn6a9/"},
+  {n:"Florero",c:"complementos",ca:{cod:"17",p:10700},li:null,img:"https://drive.google.com/thumbnail?id=1dB8pE9K321hnb1LUwMj1OrHTadaDG1AW&sz=w400",url:"https://koken-art.com/productos/florero-de-ceramica-bn2ae/"},
+  {n:"Mantequera",c:"complementos",ca:{cod:"718",p:18400},li:{cod:"718-L",p:22300},img:"https://i.imgur.com/SKG5mFi.webp",url:"https://koken-art.com/productos/mantequera-combina-disenos-y-cantidad-libre-etg5t/"},
+  {n:"Hornito",c:"complementos",ca:{cod:"719",p:7100},li:{cod:"719-L",p:3600},img:"https://i.imgur.com/q1KY53G.webp"},
+  {n:"Cucharita",c:"complementos",ca:{cod:"720",p:2200},li:{cod:"720-L",p:700},img:"https://i.imgur.com/nZEHY3Z.webp"},
+  {n:"Porta Saquito Tetera",c:"complementos",ca:{cod:"723",p:3700},li:{cod:"723-L",p:3600},img:"https://i.imgur.com/IgY6Z7N.webp",url:"https://koken-art.com/productos/posa-saquito-de-te-combina-disenos-y-cantidad-libre-f48mk/"},
+  {n:"Pala Torta",c:"complementos",ca:{cod:"725",p:6800},li:{cod:"725-L",p:5900},img:"https://i.imgur.com/WbqKNAo.webp",url:"https://koken-art.com/productos/pala-de-torta-combina-disenos-y-cantidad-libre-togec/"},
+  {n:"Tablita",c:"complementos",ca:{cod:"8",p:13300},li:{cod:"8-L",p:9100},img:"https://drive.google.com/thumbnail?id=1LDV-XSKGhgOO5UWkabcf2tD9CwCE3Dse&sz=w400"},
+  {n:"Tarro Yerbero",c:"complementos",ca:{cod:"600",p:25200},li:{cod:"600 L",p:31800},img:"https://i.imgur.com/RXA6k4Z.webp",url:"https://koken-art.com/productos/tarro-combina-disenos-y-cantidad-libre-matdz/"},
+  {n:"Decanter",c:"complementos",ca:{cod:"2150",p:11200},li:{cod:"2150-L",p:9400},img:"https://drive.google.com/thumbnail?id=1-s_TQUnIEITwC5i7RdVzvsTWcycAZo-T&sz=w400",url:"https://koken-art.com/productos/decanter-florero-jarra-peacook/"},
+  {n:"Lechera",c:"complementos",ca:{cod:"724",p:9400},li:{cod:"724-L",p:14600},img:"https://i.imgur.com/yiwfpI7.webp",url:"https://koken-art.com/productos/lechera-combina-disenos-y-cantidad-libre-weuwm/"},
+  {n:"Jarra con Manija",c:"complementos",ca:{cod:"1110",p:19500},li:{cod:"1110-L",p:17700},img:"https://i.imgur.com/RaGfGK2.webp",url:"https://koken-art.com/productos/jarra-nocturna-butterfly/"},
+  {n:"Sorbetes Mariposa / Osito",c:"complementos",pack:6,ca:{cod:"—",p:7600},li:null,img:"https://drive.google.com/thumbnail?id=1sYk1ZNNGGs7SiQiPfwXDhUssnPmMcSrY&sz=w400",url:"https://koken-art.com/productos/pack-x6-sorbetes-con-flores-de-colores-99zes/"},
+  {n:"Cucharita Corta Flor",c:"complementos",pack:6,ca:{cod:"9052",p:3700},li:null,img:"https://i.imgur.com/mOvpbm8.webp"},
+  {n:"Cucharita Larga Flor",c:"complementos",pack:6,ca:{cod:"9053",p:3900},li:null,img:"https://i.imgur.com/mOvpbm8.webp",url:"https://koken-art.com/productos/cucharitas-largas-doradas-pack-x6"},
+  {n:"Infusores de Té",c:"complementos",pack:6,ca:{cod:"1583",p:2400},li:null,img:"https://i.imgur.com/ylBE7Xc.webp",url:"https://koken-art.com/productos/difusores-plateados-1oain/"},
+];
+
+const CATS = {
+  mates:{label:"Mates",pack:12},
+  tazas:{label:"Tazas & Mugs",pack:12},
+  bowls:{label:"Bowls & Cazuelas",pack:6},
+  platos:{label:"Platos",pack:6},
+  fuentes:{label:"Fuentes",pack:6},
+  teteras:{label:"Teteras",pack:6},
+  vidrio:{label:"Vidrio & Cristalería",pack:12},
+  madera:{label:"Madera",pack:6},
+  complementos:{label:"Complementos",pack:6},
+};
+const COMP_X12 = ["Cucharita","Hornito","Porta Saquito Tetera"];
+let activeCat = 'todos';
+const fmt = n => '$' + n.toLocaleString('es-AR');
+
+// ── PEDIDO STATE ──
+// pedido[key] = { n, cod, precio, qty, nota }
+const pedido = {};
+
+function pedidoKey(p) { return p.ca.cod + '|' + p.n; }
+
+function actualizarCarrito() {
+  const items = Object.values(pedido).filter(i => i.qty > 0);
+  const count = items.reduce((a,i) => a + i.qty, 0);
+  const total = items.reduce((a,i) => a + i.qty * i.precio, 0);
+  const bar = document.getElementById('carrito-bar');
+  if (count > 0) {
+    bar.classList.add('visible');
+    document.getElementById('carrito-count').textContent = count + ' unidad' + (count !== 1 ? 'es' : '');
+    document.getElementById('carrito-total').textContent = 'Total estimado: ' + fmt(total);
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+function cambiarQty(key, delta) {
+  if (!pedido[key]) return;
+  pedido[key].qty = Math.max(0, (pedido[key].qty || 0) + delta);
+  const el = document.getElementById('qty-' + CSS.escape(key));
+  if (el) el.textContent = pedido[key].qty;
+  actualizarCarrito();
+}
+
+function cambiarNota(key, val) {
+  if (!pedido[key]) return;
+  pedido[key].nota = val;
+}
+
+function limpiarPedido() {
+  Object.keys(pedido).forEach(k => { pedido[k].qty = 0; pedido[k].nota = ''; });
+  document.querySelectorAll('.qty-val').forEach(el => el.textContent = '0');
+  document.querySelectorAll('.nota-input').forEach(el => el.value = '');
+  actualizarCarrito();
+}
+
+function abrirModal() {
+  const items = Object.values(pedido).filter(i => i.qty > 0);
+  if (!items.length) return;
+  const resumen = document.getElementById('resumen-pedido');
+  resumen.innerHTML = items.map(i =>
+    `<div><strong>${i.qty}x ${i.n}</strong> (${i.cod}) — ${fmt(i.precio * i.qty)}${i.nota ? ` · <em>${i.nota}</em>` : ''}</div>`
+  ).join('');
+  document.getElementById('estado-envio').style.display = 'none';
+  document.getElementById('modal-overlay').classList.add('visible');
+}
+
+function cerrarModal() {
+  document.getElementById('modal-overlay').classList.remove('visible');
+}
+
+async function enviarPedido() {
+  const nombre     = document.getElementById('campo-nombre').value.trim();
+  const dni        = document.getElementById('campo-dni').value.trim();
+  const mail       = document.getElementById('campo-mail').value.trim();
+  const tel        = document.getElementById('campo-tel').value.trim();
+  const provincia  = document.getElementById('campo-provincia').value.trim();
+  const direccion  = document.getElementById('campo-direccion').value.trim();
+  const cp         = document.getElementById('campo-cp').value.trim();
+  const transporte = document.getElementById('campo-transporte').value.trim();
+
+  if (!nombre) { alert('Por favor ingresá tu nombre y apellido.'); return; }
+  if (!tel) { alert('Por favor ingresá tu teléfono.'); return; }
+  if (!mail) { alert('Por favor ingresá tu mail.'); return; }
+
+  const items = Object.values(pedido).filter(i => i.qty > 0);
+  const total = items.reduce((a,i) => a + i.qty * i.precio, 0);
+  const fecha = new Date().toLocaleDateString('es-AR');
+
+  // ── Armar mensaje WhatsApp ──
+  let msg = `🏺 *Pedido KOKEN*\n`;
+  msg += `📅 ${fecha}\n\n`;
+  msg += `👤 *Datos del cliente*\n`;
+  if (dni)   msg += `• DNI/CUIT: ${dni}\n`;
+  msg += `• Nombre: ${nombre}\n`;
+  if (mail)  msg += `• Mail: ${mail}\n`;
+  if (tel)   msg += `• Tel: ${tel}\n`;
+  msg += `\n📦 *Envío*\n`;
+  if (provincia)  msg += `• Provincia: ${provincia}\n`;
+  if (direccion)  msg += `• Dirección: ${direccion}\n`;
+  if (cp)         msg += `• CP: ${cp}\n`;
+  if (transporte) msg += `• Transporte: ${transporte}\n`;
+  msg += `\n🛒 *Productos*\n`;
+  items.forEach(i => {
+    msg += `• ${i.qty}x ${i.n} (${i.cod}) — ${fmt(i.precio * i.qty)}`;
+    if (i.nota) msg += ` · _${i.nota}_`;
+    msg += '\n';
+  });
+  msg += `\n💰 *Total estimado: ${fmt(total)}*`;
+
+  // ── Abrir WhatsApp PRIMERO (sincrónico, evita bloqueo en móvil) ──
+  const waUrl = 'https://wa.me/5491172428310?text=' + encodeURIComponent(msg);
+  window.location.href = waUrl;
+  cerrarModal();
+
+  // ── Guardar en Google Sheets en segundo plano ──
+  if (SHEETS_URL && SHEETS_URL !== 'TU_APPS_SCRIPT_URL_AQUI') {
+    try {
+      const filas = items.map(i => ({
+        fecha, nombre, dni, mail, tel,
+        provincia, direccion, cp, transporte,
+        producto: i.n, cod: i.cod,
+        qty: i.qty, precio_unit: i.precio,
+        subtotal: i.qty * i.precio,
+        nota: i.nota || ''
+      }));
+      fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ pedido: filas, total, fecha, nombre })
+      });
+    } catch(e) {}
+  }
+}
+
+function sc(cat, btn){
+  activeCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render(){
+  const q = document.getElementById('si').value.toLowerCase().trim();
+  const cats = activeCat === 'todos' ? Object.keys(CATS) : [activeCat];
+  let html = '', shown = 0;
+
+  cats.forEach(cat => {
+    const items = P.filter(p => p.c === cat && (!q ||
+      p.n.toLowerCase().includes(q) ||
+      p.ca.cod.toLowerCase().includes(q) ||
+      (p.li && p.li.cod.toLowerCase().includes(q))
+    ));
+    if(!items.length) return;
+    shown += items.length;
+    const catPack = CATS[cat].pack;
+    const colLabel = cat === 'madera' ? 'Precio unitario' : 'Con diseño';
+    const liLabel = cat === 'madera' ? '' : 'Liso';
+    html += `<div class="category-title">${CATS[cat].label}</div>
+<table class="pt"><thead><tr>
+  <th style="width:38%">Producto</th>
+  <th class="r" style="width:16%">${colLabel}</th>
+  <th class="r" style="width:16%">${liLabel}</th>
+  <th class="r" style="width:16%">Cant.</th>
+  <th style="width:14%">Colección / nota</th>
+</tr></thead><tbody>`;
+
+    items.forEach(p => {
+      const itemPack = (cat === 'complementos' && COMP_X12.includes(p.n)) ? 12 : catPack;
+      const packNote = (cat === 'complementos' && itemPack !== catPack)
+        ? ` <span style="font-size:10px;color:#aaa">x${itemPack}</span>` : '';
+      const lp = (cat === 'madera' || !p.li)
+        ? `<td class="pe">—</td>`
+        : `<td class="pc">${fmt(p.li.p)}</td>`;
+      const imgHtml = p.img ? `<img src="${getImg(p.img)}" alt="${p.n}" style="width:56px;height:56px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:8px;">` : '';
+      const nameHtml = p.url ? `<a href="${p.url}" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #e5e5e5;">${p.n}${packNote}</a>` : `${p.n}${packNote}`;
+
+      // Init pedido entry
+      const key = pedidoKey(p);
+      if (!pedido[key]) pedido[key] = { n: p.n, cod: p.ca.cod, precio: p.ca.p, qty: 0, nota: '' };
+      const qty = pedido[key].qty;
+      const nota = pedido[key].nota || '';
+
+      html += `<tr>
+        <td class="nm">${imgHtml}${nameHtml}</td>
+        <td class="pc">${fmt(p.ca.p)}</td>
+        ${lp}
+        <td class="qty-cell">
+          <div class="qty-wrap">
+            <button class="qty-btn" onclick="cambiarQty('${key.replace(/'/g,"\\'")}', -1)">−</button>
+            <span class="qty-val" id="qty-${CSS.escape(key)}">${qty}</span>
+            <button class="qty-btn" onclick="cambiarQty('${key.replace(/'/g,"\\'")}', 1)">+</button>
+          </div>
+        </td>
+        <td><input class="nota-input" type="text" placeholder="ej: Botanic, Purple, Blue" value="${nota}" oninput="cambiarNota('${key.replace(/'/g,"\\'")}', this.value)"></td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+  });
+
+  document.getElementById('pc').innerHTML = shown
+    ? html
+    : `<div class="no-results">Sin resultados para "${q}"</div>`;
+}
+
+render();
+</script>
+</body>
+</html>
