@@ -94,6 +94,15 @@ footer a { color: #666; text-decoration: none; }
   font-size: 11px;
   width: 100%;
 }
+.card select.nota-input {
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 4px 6px;
+  background: #fff;
+  color: #555;
+  cursor: pointer;
+  appearance: auto;
+}
 
 /* PEDIDO */
 .qty-cell { white-space: nowrap; text-align: center; }
@@ -156,6 +165,7 @@ footer a { color: #666; text-decoration: none; }
 <div class="search-bar"><input type="text" id="si" placeholder="Buscar producto o código..." oninput="render()"></div>
 <div class="filters">
   <button class="filter-btn active" onclick="sc('todos',this)">Todos</button>
+  <button class="filter-btn" onclick="sc('kits',this)">🎁 Pre Venta</button>
   <button class="filter-btn" onclick="sc('mates',this)">Mates</button>
   <button class="filter-btn" onclick="sc('tazas',this)">Tazas</button>
   <button class="filter-btn" onclick="sc('bowls',this)">Bowls & Cazuelas</button>
@@ -165,7 +175,6 @@ footer a { color: #666; text-decoration: none; }
   <button class="filter-btn" onclick="sc('vidrio',this)">Vidrio</button>
   <button class="filter-btn" onclick="sc('madera',this)">Madera</button>
   <button class="filter-btn" onclick="sc('complementos',this)">Complementos</button>
-  <button class="filter-btn" onclick="sc('kits',this)">🎁 Kits</button>
   <button class="filter-btn" onclick="sc('pedido',this)">⏳ A Pedido</button>
 </div>
 <div class="container" id="pc"></div>
@@ -398,6 +407,7 @@ const P = [
 ];
 
 const CATS = {
+  kits:{label:'🎁 PRE VENTA · DÍA DEL AMIGO',pack:1},
   mates:{label:"Mates",pack:12},
   tazas:{label:"Tazas & Mugs",pack:12},
   bowls:{label:"Bowls & Cazuelas",pack:6},
@@ -407,7 +417,7 @@ const CATS = {
   vidrio:{label:"Vidrio & Cristalería",pack:12},
   madera:{label:"Madera",pack:6},
   complementos:{label:"Complementos",pack:6},
-  kits:{label:'🎁 Kits Día del Amigo · PRE VENTA',pack:1},
+  kits:{label:'🎁 PRE VENTA · DÍA DEL AMIGO',pack:1},
   pedido:{label:'⏳ A Pedido · 15 días hábiles · Seña 50%',pack:1},
 };
 const COMP_X12 = ["Porta Saquito Tetera"];
@@ -589,7 +599,26 @@ function render(){
             <span class="qty-val" id="qty-${CSS.escape(key)}">${qty}</span>
             <button class="qty-btn" onclick="cambiarQty('${key.replace(/'/g,"\\'")}', 1)">+</button>
           </div>
-          <input class="nota-input" type="text" placeholder="ej: Botanic, Purple, Blue" value="${nota}" oninput="cambiarNota('${key.replace(/'/g,"\\'")}', this.value)">
+          <select class="nota-input" onchange="cambiarNota('${key.replace(/'/g,"\\'")}', this.value)" style="margin-top:6px;font-size:11px;width:100%;border:1px solid #e5e5e5;border-radius:4px;padding:4px 4px;background:#fff;color:#555;">
+            <option value="">Colección...</option>
+            <option value="Mix Surtido">Mix Surtido – lo elegimos nosotros</option>
+            <option value="Surtido Personalizado">Surtido Personalizado – aclaralo en Notas</option>
+            <option value="Golden Nest">Golden Nest</option>
+            <option value="Ginger Gold">Ginger Gold</option>
+            <option value="Harmony">Harmony</option>
+            <option value="Purple">Purple</option>
+            <option value="Botanic Black">Botanic Black</option>
+            <option value="Blue Flower">Blue Flower</option>
+            <option value="Dragonfly">Dragonfly</option>
+            <option value="Butterfly">Butterfly</option>
+            <option value="Spring">Spring</option>
+            <option value="Sync">Sync</option>
+            <option value="Gold">Gold</option>
+            <option value="Desert">Desert</option>
+            <option value="Peacook">Peacook</option>
+            <option value="Winter">Winter</option>
+            <option value="Utopia">Utopia</option>
+          </select>
         </div>
       </div>`;
     });
