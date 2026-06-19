@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KOKEN — Lista de precios mayoristas</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Georgia', serif; background: #faf8f5; color: #2c2c2a; }
+body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #faf8f5; color: #2c2c2a; }
 .hero { background: #2c2c2a; color: #faf8f5; padding: 48px 32px 40px; text-align: center; }
 .hero .brand { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: #888; margin-bottom: 12px; }
 .hero h1 { font-size: 32px; font-weight: 400; letter-spacing: 0.04em; margin-bottom: 8px; }
@@ -14,10 +15,10 @@ body { font-family: 'Georgia', serif; background: #faf8f5; color: #2c2c2a; }
 .banner { background: #b5d4f4; color: #042c53; text-align: center; padding: 14px 20px; font-size: 14px; }
 .banner strong { font-weight: 600; }
 .search-bar { max-width: 640px; margin: 28px auto 0; padding: 0 20px; }
-.search-bar input { width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: #fff; color: #2c2c2a; outline: none; font-family: inherit; }
+.search-bar input { width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: #fff; color: #2c2c2a; outline: none; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; }
 .search-bar input:focus { border-color: #888; }
 .filters { display: flex; gap: 8px; flex-wrap: wrap; max-width: 960px; margin: 16px auto 0; padding: 0 20px; }
-.filter-btn { padding: 6px 14px; font-size: 12px; border: 1px solid #ccc; border-radius: 20px; background: #fff; cursor: pointer; letter-spacing: 0.04em; transition: all 0.15s; font-family: inherit; }
+.filter-btn { padding: 6px 14px; font-size: 12px; border: 1px solid #ccc; border-radius: 20px; background: #fff; cursor: pointer; letter-spacing: 0.04em; transition: all 0.15s; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; }
 .filter-btn:hover, .filter-btn.active { background: #2c2c2a; color: #fff; border-color: #2c2c2a; }
 .container { max-width: 960px; margin: 0 auto; padding: 24px 20px 60px; }
 .category-title { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #888; margin: 36px 0 14px; padding-bottom: 8px; border-bottom: 1px solid #e5e5e5; }
@@ -100,7 +101,7 @@ footer a { color: #666; text-decoration: none; }
 .qty-btn { width: 24px; height: 24px; border: 1px solid #ccc; background: #fff; border-radius: 4px; cursor: pointer; font-size: 14px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background 0.1s; }
 .qty-btn:hover { background: #2c2c2a; color: #fff; border-color: #2c2c2a; }
 .qty-val { min-width: 28px; text-align: center; font-size: 14px; font-weight: 500; }
-.nota-input { width: 100%; font-size: 12px; font-family: inherit; border: none; border-bottom: 1px solid #e5e5e5; background: transparent; color: #666; padding: 2px 0; outline: none; }
+.nota-input { width: 100%; font-size: 12px; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; border: none; border-bottom: 1px solid #e5e5e5; background: transparent; color: #666; padding: 2px 0; outline: none; }
 .nota-input:focus { border-bottom-color: #888; }
 .nota-input::placeholder { color: #ccc; }
 
@@ -116,11 +117,11 @@ footer a { color: #666; text-decoration: none; }
 #carrito-info strong { font-size: 16px; }
 .btn-pedido {
   background: #fff; color: #2c2c2a; border: none; padding: 10px 22px;
-  border-radius: 6px; font-size: 14px; font-family: inherit; cursor: pointer;
+  border-radius: 6px; font-size: 14px; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; cursor: pointer;
   font-weight: 600; letter-spacing: 0.02em; transition: background 0.15s;
 }
 .btn-pedido:hover { background: #e8e5e0; }
-.btn-limpiar { background: transparent; color: #aaa; border: 1px solid #555; padding: 10px 14px; border-radius: 6px; font-size: 12px; font-family: inherit; cursor: pointer; margin-right: 8px; }
+.btn-limpiar { background: transparent; color: #aaa; border: 1px solid #555; padding: 10px 14px; border-radius: 6px; font-size: 12px; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; cursor: pointer; margin-right: 8px; }
 .btn-limpiar:hover { color: #fff; border-color: #aaa; }
 
 /* MODAL */
@@ -164,6 +165,7 @@ footer a { color: #666; text-decoration: none; }
   <button class="filter-btn" onclick="sc('vidrio',this)">Vidrio</button>
   <button class="filter-btn" onclick="sc('madera',this)">Madera</button>
   <button class="filter-btn" onclick="sc('complementos',this)">Complementos</button>
+  <button class="filter-btn" onclick="sc('kits',this)">🎁 Kits</button>
   <button class="filter-btn" onclick="sc('pedido',this)">⏳ A Pedido</button>
 </div>
 <div class="container" id="pc"></div>
@@ -287,11 +289,11 @@ function getImg(src) {
 const P = [
   // MATES
   {n:"Taza Cónica",c:"tazas",ca:{cod:"16",p:6715},li:{cod:"16-L",p:3500},img:"https://i.imgur.com/uFkHOzJ.jpg",url:"https://koken-art.com/productos/taza-conica-combina-disenos-y-cantidad-libre-loyr2/"},
-  {n:"Mate Prisma",c:"mates",ca:{cod:"20",p:6035},li:{cod:"20-L",p:3500},img:"https://drive.google.com/thumbnail?id=1fI1y-OxwHb_8EXXApvN-CB3H5EkYLTSA&sz=w400",url:"https://koken-art.com/productos/mates-prisma-combina-disenos-y-cantidad-libre-zpeli/"},
-  {n:"Mate Diamante",c:"mates",ca:{cod:"23",p:6035},li:{cod:"23-L",p:3500},img:"https://i.imgur.com/VG6kYKK.jpg",url:"https://koken-art.com/productos/mates-diamante-combina-disenos-y-cantidad-libre-z80wd/"},
-  {n:"Mate con Asa",c:"mates",ca:{cod:"21",p:6035},li:{cod:"21-L",p:3500},img:"https://i.imgur.com/dBO0l7b.jpg",url:"https://koken-art.com/productos/mates-con-asa-combina-disenos-y-cantidad-libre-9e1ih/"},
-  {n:"Mate Ovo",c:"mates",ca:{cod:"22",p:6035},li:{cod:"22 L",p:3500},img:"https://drive.google.com/thumbnail?id=1FttbSehr3rpAfBHagOBp8aKA6eEZOx5i&sz=w400",url:"https://koken-art.com/productos/mates-ovos-combina-disenos-y-cantidad-zn4kp"},
-  {n:"Mate Globo",c:"mates",ca:{cod:"36",p:6035},li:{cod:"36-L",p:3500},img:"https://i.imgur.com/V0MNDgg.jpg",url:"https://koken-art.com/productos/mate-globo-1lq12"},
+  {n:"Mate Prisma",c:"mates",ca:{cod:"20",p:6000},li:{cod:"20-L",p:3500},img:"https://drive.google.com/thumbnail?id=1fI1y-OxwHb_8EXXApvN-CB3H5EkYLTSA&sz=w400",url:"https://koken-art.com/productos/mates-prisma-combina-disenos-y-cantidad-libre-zpeli/"},
+  {n:"Mate Diamante",c:"mates",ca:{cod:"23",p:6000},li:{cod:"23-L",p:3500},img:"https://i.imgur.com/VG6kYKK.jpg",url:"https://koken-art.com/productos/mates-diamante-combina-disenos-y-cantidad-libre-z80wd/"},
+  {n:"Mate con Asa",c:"mates",ca:{cod:"21",p:6000},li:{cod:"21-L",p:3500},img:"https://i.imgur.com/dBO0l7b.jpg",url:"https://koken-art.com/productos/mates-con-asa-combina-disenos-y-cantidad-libre-9e1ih/"},
+  {n:"Mate Ovo",c:"mates",ca:{cod:"22",p:6000},li:{cod:"22 L",p:3500},img:"https://drive.google.com/thumbnail?id=1FttbSehr3rpAfBHagOBp8aKA6eEZOx5i&sz=w400",url:"https://koken-art.com/productos/mates-ovos-combina-disenos-y-cantidad-zn4kp"},
+  {n:"Mate Globo",c:"mates",ca:{cod:"36",p:6000},li:{cod:"36-L",p:3500},img:"https://i.imgur.com/V0MNDgg.jpg",url:"https://koken-art.com/productos/mate-globo-1lq12"},
   // TAZAS
   {n:"Taza Trapecio",c:"tazas",ca:{cod:"13",p:7055},li:{cod:"13 L",p:6900},img:"https://i.imgur.com/7iNwmis.jpg",url:"https://koken-art.com/productos/taza-trapecio-combina-disenos-y-cantidad-kj3km/"},
   {n:"Taza de Café",c:"pedido",ca:{cod:"4",p:5610},li:{cod:"4 L",p:3700},img:"https://i.imgur.com/Sovprw9.jpg",url:"https://koken-art.com/productos/taza-de-cafe-sin-plato-combina-disenos-y-cantidad-libre-usitc"},
@@ -324,17 +326,17 @@ const P = [
   {n:"Plato Redondo Postre",c:"pedido",ca:{cod:"808",p:10285},li:{cod:"808 L",p:11000},img:"https://i.imgur.com/X9mV41p.jpg",url:"https://koken-art.com/productos/plato-postre-combina-disenos-y-cantidad-libre-s2gas/"},
   {n:"Plato Cuadrado Chico",c:"pedido",ca:{cod:"801",p:12920},li:{cod:"801 L",p:14800},img:"https://i.imgur.com/VdS62ng.jpg",url:"https://koken-art.com/productos/platos-cuadrados-ch-combina-disenos-y-cantidad-5qhp3/"},
   {n:"Plato Cuadrado Grande",c:"pedido",ca:{cod:"800",p:14365},li:{cod:"800 L",p:9800},img:"https://i.imgur.com/z4mVl1S.jpg",url:"https://koken-art.com/productos/platos-cuadrados-grandes-combina-disenos-y-cantidad-gwfqx/"},
-  {n:"Bandeja Rectangular Chica",c:"platos",ca:{cod:"803",p:12325},li:{cod:"803 L",p:13800},img:"https://i.imgur.com/SnZaX46.jpg",url:"https://koken-art.com/productos/bandejas-rectangulares-chicas-combina-disenos-y-cantidad-libre-tfxfb/"},
+  {n:"Bandeja Rectangular Chica",c:"platos",ca:{cod:"803",p:12300},li:{cod:"803 L",p:13800},img:"https://i.imgur.com/SnZaX46.jpg",url:"https://koken-art.com/productos/bandejas-rectangulares-chicas-combina-disenos-y-cantidad-libre-tfxfb/"},
   {n:"Plato Oct",c:"pedido",ca:{cod:"2001",p:17765},li:{cod:"2001-L",p:14100},img:"https://i.imgur.com/Ca4vbQs.jpg",url:"https://koken-art.com/productos/plato-octogonal-combina-disenos-y-cantidad-libre-4kurf/"},
   {n:"Plato de Taza de Té",c:"platos",ca:{cod:"03/PL",p:6070},li:{cod:"03/PL L",p:4200},img:"https://i.imgur.com/wz7D71r.jpg",url:"https://koken-art.com/productos/platos-de-te-combina-disenos-y-cantidad-qvgtr/"},
   {n:"Plato de Café",c:"pedido",ca:{cod:"4 PL",p:5865},li:{cod:"04/pl-L",p:6000},img:"https://i.imgur.com/F0Zs6Ro.jpg",url:"https://koken-art.com/productos/plato-de-cafe-combina-disenos-y-cantidad-libre-54xfi/"},
   {n:"Plato Desayuno",c:"platos",ca:{cod:"916",p:8585},li:{cod:"916-L",p:5200},img:"https://i.imgur.com/HS5IX3d.jpg",url:"https://koken-art.com/productos/plato-desayuno-combina-disenos-y-cantidad-7zr3b/"},
-  {n:"Plato Gota",c:"platos",ca:{cod:"717",p:9520},li:null,img:"https://i.imgur.com/VZIZenI.jpg",url:"https://koken-art.com/productos/plato-gota-combina-disenos-y-cantidad-0ywu9/"},
-  {n:"Plato Corazón Grande",c:"platos",ca:{cod:"715",p:10115},li:{cod:"715-L",p:11300},img:"https://drive.google.com/thumbnail?id=177MnLP_KoGOWmxr8akh_NcMO-3u8AF_J&sz=w400",url:"https://koken-art.com/productos/platos-corazon-combina-disenos-y-cantidad-61ojq/"},
+  {n:"Plato Gota",c:"platos",ca:{cod:"717",p:12300},li:null,img:"https://i.imgur.com/VZIZenI.jpg",url:"https://koken-art.com/productos/plato-gota-combina-disenos-y-cantidad-0ywu9/"},
+  {n:"Plato Corazón Grande",c:"platos",ca:{cod:"715",p:12300},li:{cod:"715-L",p:11300},img:"https://drive.google.com/thumbnail?id=177MnLP_KoGOWmxr8akh_NcMO-3u8AF_J&sz=w400",url:"https://koken-art.com/productos/platos-corazon-combina-disenos-y-cantidad-61ojq/"},
   {n:"Plato Corazón Mediano",c:"platos",ca:{cod:"715 M",p:6885},li:null,img:"https://i.imgur.com/uYmj0K9.jpg",url:"https://koken-art.com/productos/plato-corazon-chico-combina-disenos-y-cantidad-libre-yk5uz/"},
   {n:"Plato Tostada",c:"platos",ca:{cod:"716",p:8245},li:{cod:"716 L",p:8900},img:"https://drive.google.com/thumbnail?id=1BkzXBaMXHxbY0EQI-_BAxy1-BDm-BVXR&sz=w400",url:"https://koken-art.com/productos/platos-tostada-combina-disenos-y-cantidad-wfjjl/"},
-  {n:"Plato Oval",c:"platos",ca:{cod:"805",p:10115},li:{cod:"805-L",p:9700},img:"https://i.imgur.com/iNjIqAm.jpg",url:"https://koken-art.com/productos/bandeja-oval-combina-disenos-y-cantidad-libre-zbu2y/"},
-  {n:"Plato Muffin",c:"platos",ca:{cod:"30",p:12410},li:{cod:"30-L",p:8800},img:"https://drive.google.com/thumbnail?id=1_Yi6fKqs0LLO3ayc9ej7o7TpipXbvXo-&sz=w400",url:"https://koken-art.com/productos/plato-gota-copia-17rp9/"},
+  {n:"Plato Oval",c:"platos",ca:{cod:"805",p:12300},li:{cod:"805-L",p:9700},img:"https://i.imgur.com/iNjIqAm.jpg",url:"https://koken-art.com/productos/bandeja-oval-combina-disenos-y-cantidad-libre-zbu2y/"},
+  {n:"Plato Muffin",c:"platos",ca:{cod:"30",p:12300},li:{cod:"30-L",p:8800},img:"https://drive.google.com/thumbnail?id=1_Yi6fKqs0LLO3ayc9ej7o7TpipXbvXo-&sz=w400",url:"https://koken-art.com/productos/plato-gota-copia-17rp9/"},
   {n:"Plato de Taza de Té Flor",c:"platos",ca:{cod:"38-pl",p:8015},li:null,img:"https://drive.google.com/thumbnail?id=1jWB1mAelT8xY5oEtuLWQHLz0baMocHrl&sz=w400",url:"https://koken-art.com/productos/plato-de-te-flor-1ty4s"},
   // FUENTES
   {n:"Fuente Ovalada",c:"pedido",ca:{cod:"106/CH",p:21420},li:{cod:"106/CH-L",p:16500},img:"https://i.imgur.com/4eCGgMF.jpg",url:"https://koken-art.com/productos/fuente-oval-combina-disenos-y-cantidad-x2wte/"},
@@ -343,7 +345,7 @@ const P = [
   {n:"Fuente Rectangular B. Ondulado Gr",c:"pedido",ca:{cod:"118/GR",p:26350},li:{cod:"118/GR-L",p:18300},img:"https://drive.google.com/thumbnail?id=1ohzQLx4T8yCJf16JVRhtSVAi-hNOQQvI&sz=w400",url:"https://koken-art.com/productos/fuente-ondulada-grande-combina-disenos-y-cantidad-libre-kvdhu/"},
   {n:"Fuente Rectangular B. Ondulado M",c:"pedido",ca:{cod:"118/CH",p:22185},li:{cod:"118/CH-L",p:24900},img:"https://drive.google.com/thumbnail?id=1uXz-KklSzaNcHWb3DdHABwDyKHRiwfzm&sz=w400",url:"https://koken-art.com/productos/fuente-ondulada-mediana-combina-disenos-y-cantidad-libre-8bqe6/"},
   {n:"Fuente Rectangular Grande",c:"fuentes",ca:{cod:"804",p:15300},li:{cod:"804 L",p:18000},img:"https://i.imgur.com/nP9TdCl.jpg",url:"https://koken-art.com/productos/bandeja-rectangular-grande-combina-diseno-y-cantidad-enmck/"},
-  {n:"Bandeja Rectangular",c:"fuentes",ca:{cod:"803",p:12325},li:{cod:"803 L",p:13800},img:"https://i.imgur.com/SnZaX46.jpg",url:"https://koken-art.com/productos/bandejas-rectangulares-chicas-combina-disenos-y-cantidad-libre-tfxfb/"},
+  {n:"Bandeja Rectangular",c:"fuentes",ca:{cod:"803",p:12300},li:{cod:"803 L",p:13800},img:"https://i.imgur.com/SnZaX46.jpg",url:"https://koken-art.com/productos/bandejas-rectangulares-chicas-combina-disenos-y-cantidad-libre-tfxfb/"},
   {n:"Cazuela Oval Ondulada",c:"pedido",ca:{cod:"1009",p:14994},li:{cod:"1009-L",p:10400},img:"https://drive.google.com/thumbnail?id=18TjDxYVbBL81Ok5RGPIjvST2MI3wmTMH&sz=w400",url:"https://koken-art.com/productos/panera-oval-butterfly-copia-58dm0"},
   // TETERAS
   {n:"Tetera 500ml",c:"teteras",ca:{cod:"9",p:19890},li:{cod:"9-L",p:13400},img:"https://i.imgur.com/ooYpE5E.jpg",url:"https://koken-art.com/productos/tetera-copia-1ydgf"},
@@ -389,6 +391,10 @@ const P = [
   {n:"Fanal",c:"vidrio",ca:{cod:"fanal",p:5800},li:null,img:"https://i.imgur.com/e0BcEFJ.jpg"},
   {n:"Cucharita Ramita",c:"complementos",pack:6,ca:{cod:"ram-1",p:900},li:null,img:"https://i.imgur.com/jS9EXqP.jpg"},
   {n:"Bombilla",c:"complementos",ca:{cod:"1170",p:1105},li:null,img:"https://i.imgur.com/OKJ5eQ8.jpg",url:"https://koken-art.com/productos/bombilla/"},
+  {n:"Kit Taza & Bandeja Oval",c:"kits",ca:{cod:"kit-tbo",p:18400},precioReal:20400,li:null,img:"",url:"https://koken-art.com/productos/kit-taza-bandeja-oval-1iwzg/"},
+  {n:"Kit Mate con Asa & Plato Gota",c:"kits",ca:{cod:"kit-mpg",p:15400},precioReal:18300,li:null,img:"https://i.imgur.com/WtBLK0s.jpg",url:"https://koken-art.com/productos/kit-mate-con-asa-plato-gota-lfq0g/"},
+  {n:"Kit Mate con Asa & Plato Corazón",c:"kits",ca:{cod:"kit-mpc",p:15400},precioReal:18300,li:null,img:"https://i.imgur.com/tWyyyVq.jpg",url:"https://koken-art.com/productos/kit-mate-con-asa-plato-corazon-fzqf4/"},
+  {n:"Kit Taza Cónica & Plato Corazón",c:"kits",ca:{cod:"kit-tcp",p:17100},precioReal:19000,li:null,img:"https://i.imgur.com/7bK5HT4.jpg",url:"https://koken-art.com/productos/kit-taza-conica-plato-corazon-i9dny/"},
 ];
 
 const CATS = {
@@ -401,11 +407,12 @@ const CATS = {
   vidrio:{label:"Vidrio & Cristalería",pack:12},
   madera:{label:"Madera",pack:6},
   complementos:{label:"Complementos",pack:6},
+  kits:{label:'🎁 Kits Día del Amigo · PRE VENTA',pack:1},
   pedido:{label:'⏳ A Pedido · 15 días hábiles · Seña 50%',pack:1},
 };
 const COMP_X12 = ["Porta Saquito Tetera"];
 let activeCat = 'todos';
-const fmt = n => '$' + n.toLocaleString('es-AR');
+const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
 
 // ── PEDIDO STATE ──
 // pedido[key] = { n, cod, precio, qty, nota }
@@ -576,7 +583,7 @@ function render(){
         <div class="card-body">
           <div class="card-name">${nameHtml}</div>
           <div class="card-cod">${p.ca.cod}</div>
-          <div class="card-price">${fmt(p.ca.p)}</div>
+          <div class="card-price">${fmt(p.ca.p)}${p.precioReal ? ` <span style='font-size:12px;color:#bbb;text-decoration:line-through'>${fmt(p.precioReal)}</span>` : ''}</div>
           <div class="card-qty">
             <button class="qty-btn" onclick="cambiarQty('${key.replace(/'/g,"\\'")}', -1)">−</button>
             <span class="qty-val" id="qty-${CSS.escape(key)}">${qty}</span>
