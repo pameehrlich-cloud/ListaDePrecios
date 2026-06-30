@@ -161,6 +161,7 @@ footer a { color: #666; text-decoration: none; }
   <div class="subtitle">Precio unitario por pieza · Cerámica apta microondas</div>
 </div>
 <div class="banner">Únicamente en efectivo o transferencia</div>
+<div style="background:#2c2c2a;color:#faf8f5;text-align:center;padding:10px 20px;font-size:13px;letter-spacing:0.02em;">Venta mayorista a partir de <strong>$150.000</strong></div>
 
 <div class="search-bar"><input type="text" id="si" placeholder="Buscar producto o código..." oninput="render()"></div>
 <div class="filters">
@@ -173,6 +174,7 @@ footer a { color: #666; text-decoration: none; }
   <button class="filter-btn" onclick="sc('fuentes',this)">Fuentes</button>
   <button class="filter-btn" onclick="sc('teteras',this)">Teteras</button>
   <button class="filter-btn" onclick="sc('vidrio',this)">Vidrio</button>
+  <button class="filter-btn" onclick="sc('madera',this)">Madera</button>
   <button class="filter-btn" onclick="sc('madera',this)">Madera</button>
   <button class="filter-btn" onclick="sc('complementos',this)">Complementos</button>
   <button class="filter-btn" onclick="sc('pedido',this)">⏳ A Pedido</button>
@@ -341,7 +343,7 @@ const P = [
   {n:"Plato Corazón Mediano",c:"platos",ca:{cod:"715 M",p:6900},li:null,img:"https://i.imgur.com/uYmj0K9.jpg",url:"https://koken-art.com/productos/plato-corazon-chico-combina-disenos-y-cantidad-libre-yk5uz/"},
   {n:"Plato Tostada",c:"platos",ca:{cod:"716",p:8500},li:{cod:"716 L",p:8900},img:"https://drive.google.com/thumbnail?id=1BkzXBaMXHxbY0EQI-_BAxy1-BDm-BVXR&sz=w400",url:"https://koken-art.com/productos/platos-tostada-combina-disenos-y-cantidad-wfjjl/"},
   {n:"Plato Oval",c:"platos",ca:{cod:"805",p:12300},li:{cod:"805-L",p:9700},img:"https://i.imgur.com/iNjIqAm.jpg",url:"https://koken-art.com/productos/bandeja-oval-combina-disenos-y-cantidad-libre-zbu2y/"},
-  {n:"Plato Muffin",c:"platos",ca:{cod:"30",p:12300},li:{cod:"30-L",p:8800},img:"https://drive.google.com/thumbnail?id=1_Yi6fKqs0LLO3ayc9ej7o7TpipXbvXo-&sz=w400",url:"https://koken-art.com/productos/plato-gota-copia-17rp9/"},
+  {n:"Plato Muffin",c:"platos",ca:{cod:"30",p:13400},li:{cod:"30-L",p:8800},img:"https://drive.google.com/thumbnail?id=1_Yi6fKqs0LLO3ayc9ej7o7TpipXbvXo-&sz=w400",url:"https://koken-art.com/productos/plato-gota-copia-17rp9/"},
   {n:"Plato de Taza de Té Flor",c:"platos",ca:{cod:"38-pl",p:8050},li:null,img:"https://drive.google.com/thumbnail?id=1jWB1mAelT8xY5oEtuLWQHLz0baMocHrl&sz=w400",url:"https://koken-art.com/productos/plato-de-te-flor-1ty4s"},
   // FUENTES
   {n:"Fuente Ovalada",c:"pedido",ca:{cod:"106/CH",p:21400},li:{cod:"106/CH-L",p:16500},img:"https://i.imgur.com/4eCGgMF.jpg",url:"https://koken-art.com/productos/fuente-oval-combina-disenos-y-cantidad-x2wte/"},
@@ -369,13 +371,13 @@ const P = [
   {n:"Vaso Doble con Wave Ch",c:"vidrio",ca:{cod:"9915",p:4250},li:null,img:"https://i.imgur.com/aEN7opI.jpg",url:"https://koken-art.com/productos/vaso-doble-vidrio-wave-ch"},
   {n:"Vaso Doble con Wave Gr",c:"vidrio",ca:{cod:"9916",p:4250},li:null,img:"https://i.imgur.com/rVEqOXF.jpg",url:"https://koken-art.com/productos/vaso-doble-vidrio-wave-gr/"},
         // MADERA
-  {n:"Posa Vaso Corazón",c:"pedido",pack:6,ca:{cod:"3922-1",p:7200},li:null,img:"https://drive.google.com/thumbnail?id=1Ikc2GXERV7ewPfuD5KNP6g-j7Lpf8BgB&sz=w400",url:"https://koken-art.com/productos/posa-vaso-corazon-q52ri"},
-  {n:"Revolver Corazón",c:"pedido",pack:6,ca:{cod:"7074-1",p:5800},li:null,img:"https://drive.google.com/thumbnail?id=1CQDnySVa_KO3sXKyCA2JCy3ZHLAvocqG&sz=w400",url:"https://koken-art.com/productos/revolvedor-corazon-uoqac"},
-  {n:"Tabla Amor",c:"pedido",pack:6,ca:{cod:"7518-1",p:9100},li:null,img:"https://i.imgur.com/aC2Ar0j.jpg",url:"https://koken-art.com/productos/tabla-amor-1gxh8/"},
-  {n:"Tabla Corazón",c:"pedido",pack:6,ca:{cod:"8189-1",p:16200},li:null,img:"https://i.imgur.com/hpqNU7W.jpg",url:"https://koken-art.com/productos/tabla-corazon-1berf/"},
-  {n:"Tabla de Madera Extra Large",c:"pedido",pack:6,ca:{cod:"7696-1",p:16500},li:null,img:"https://i.imgur.com/3HMFT0C.jpg",url:"https://koken-art.com/productos/tabla-londres-cuore-1w3ae/"},
-  {n:"Tabla Secreto",c:"pedido",pack:6,ca:{cod:"7535-1",p:10500},li:null,img:"https://i.imgur.com/sTmEafi.jpg",url:"https://koken-art.com/productos/tabla-secreto-ydtkn/"},
-  {n:"Bandeja de Madera",c:"pedido",pack:6,ca:{cod:"586",p:14900},li:null,img:"https://drive.google.com/thumbnail?id=1TNseBWtK8niez7g1rPNOYOKu0d0f189m&sz=w400",url:"https://koken-art.com/productos/bandeja-1798s"},
+  {n:"Posa Vaso Corazón",c:"madera",pack:6,ca:{cod:"3922-1",p:7200},li:null,img:"https://drive.google.com/thumbnail?id=1Ikc2GXERV7ewPfuD5KNP6g-j7Lpf8BgB&sz=w400",url:"https://koken-art.com/productos/posa-vaso-corazon-q52ri"},
+  {n:"Revolver Corazón",c:"madera",pack:6,ca:{cod:"7074-1",p:5800},li:null,img:"https://drive.google.com/thumbnail?id=1CQDnySVa_KO3sXKyCA2JCy3ZHLAvocqG&sz=w400",url:"https://koken-art.com/productos/revolvedor-corazon-uoqac"},
+  {n:"Tabla Amor",c:"madera",pack:6,ca:{cod:"7518-1",p:9100},li:null,img:"https://i.imgur.com/aC2Ar0j.jpg",url:"https://koken-art.com/productos/tabla-amor-1gxh8/"},
+  {n:"Tabla Corazón",c:"madera",pack:6,ca:{cod:"8189-1",p:16200},li:null,img:"https://i.imgur.com/hpqNU7W.jpg",url:"https://koken-art.com/productos/tabla-corazon-1berf/"},
+  {n:"Tabla de Madera Extra Large",c:"madera",pack:6,ca:{cod:"7696-1",p:16500},li:null,img:"https://i.imgur.com/3HMFT0C.jpg",url:"https://koken-art.com/productos/tabla-londres-cuore-1w3ae/"},
+  {n:"Tabla Secreto",c:"madera",pack:6,ca:{cod:"7535-1",p:10500},li:null,img:"https://i.imgur.com/sTmEafi.jpg",url:"https://koken-art.com/productos/tabla-secreto-ydtkn/"},
+  {n:"Bandeja de Madera",c:"madera",pack:6,ca:{cod:"586",p:14900},li:null,img:"https://drive.google.com/thumbnail?id=1TNseBWtK8niez7g1rPNOYOKu0d0f189m&sz=w400",url:"https://koken-art.com/productos/bandeja-1798s"},
   // COMPLEMENTOS
   {n:"Azucarera",c:"complementos",ca:{cod:"7",p:12000},li:{cod:"7-L",p:16200},img:"https://drive.google.com/thumbnail?id=11E04ov6_Chpz1SzB7NvFN4FZy3JDNn-6&sz=w400",url:"https://koken-art.com/productos/azucarera-combina-disenos-y-cantidad-libre-nn6a9/"},
   {n:"Florero",c:"complementos",ca:{cod:"17",p:10700},li:null,img:"https://drive.google.com/thumbnail?id=1dB8pE9K321hnb1LUwMj1OrHTadaDG1AW&sz=w400",url:"https://koken-art.com/productos/florero-de-ceramica-bn2ae/"},
@@ -412,6 +414,7 @@ const CATS = {
   teteras:{label:"Teteras",pack:6},
   vidrio:{label:"Vidrio & Cristalería",pack:12},
   madera:{label:"Madera",pack:6},
+  madera:{label:'🪵 Madera · A pedido · 15 días hábiles · Seña 50%',pack:6},
   complementos:{label:"Complementos",pack:6},
   kits:{label:'🎁 ESPECIAL DÍA DEL AMIGO',pack:1},
   pedido:{label:'⏳ A Pedido · 15 días hábiles · Seña 50%',pack:1},
@@ -595,7 +598,7 @@ function render(){
         <div class="card-body">
           <div class="card-name">${nameHtml}</div>
           <div class="card-cod">${p.ca.cod}</div>
-          <div class="card-price">${fmt(p.ca.p)}${p.precioReal ? ` <span style='font-size:12px;color:#bbb;text-decoration:line-through'>${fmt(p.precioReal)}</span>` : ''}</div>
+          <div class="card-price">${fmt(p.ca.p)}</div>
           <div class="card-qty">
             <button class="qty-btn" onclick="cambiarQty('${key.replace(/'/g,"\\'")}', -1)">−</button>
             <span class="qty-val" id="qty-${CSS.escape(key)}">${qty}</span>
