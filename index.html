@@ -109,7 +109,10 @@ footer a { color: #666; text-decoration: none; }
 .qty-wrap { display: inline-flex; align-items: center; gap: 4px; }
 .qty-btn { width: 24px; height: 24px; border: 1px solid #ccc; background: #fff; border-radius: 4px; cursor: pointer; font-size: 14px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background 0.1s; }
 .qty-btn:hover { background: #2c2c2a; color: #fff; border-color: #2c2c2a; }
-.qty-val { min-width: 28px; text-align: center; font-size: 14px; font-weight: 500; }
+.qty-val { min-width: 36px; width: 40px; text-align: center; font-size: 14px; font-weight: 500; border: 1px solid #ddd; border-radius: 4px; padding: 3px 2px; font-family: inherit; color: #2c2c2a; }
+.qty-val::-webkit-inner-spin-button, .qty-val::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.qty-val { -moz-appearance: textfield; }
+.qty-val:focus { border-color: #888; outline: none; }
 .nota-input { width: 100%; font-size: 12px; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; border: none; border-bottom: 1px solid #e5e5e5; background: transparent; color: #666; padding: 2px 0; outline: none; }
 .nota-input:focus { border-bottom-color: #888; }
 .nota-input::placeholder { color: #ccc; }
@@ -446,7 +449,14 @@ function cambiarQty(key, delta) {
   if (!pedido[key]) return;
   pedido[key].qty = Math.max(0, (pedido[key].qty || 0) + delta);
   const el = document.getElementById('qty-' + CSS.escape(key));
-  if (el) el.textContent = pedido[key].qty;
+  if (el) el.value = pedido[key].qty;
+  actualizarCarrito();
+}
+
+function setQty(key, val) {
+  if (!pedido[key]) return;
+  const n = Math.max(0, parseInt(val) || 0);
+  pedido[key].qty = n;
   actualizarCarrito();
 }
 
@@ -463,7 +473,7 @@ function cambiarNota(key, val) {
 
 function limpiarPedido() {
   Object.keys(pedido).forEach(k => { pedido[k].qty = 0; pedido[k].nota = ''; });
-  document.querySelectorAll('.qty-val').forEach(el => el.textContent = '0');
+  document.querySelectorAll('.qty-val').forEach(el => el.value = '0');
   document.querySelectorAll('.nota-input').forEach(el => el.value = '');
   actualizarCarrito();
 }
@@ -600,7 +610,7 @@ function render(){
           <div class="card-price">${fmt(p.ca.p)}</div>
           <div class="card-qty">
             <button class="qty-btn" onclick="cambiarQty('${key.replace(/'/g,"\\'")}', -1)">−</button>
-            <span class="qty-val" id="qty-${CSS.escape(key)}">${qty}</span>
+            <input class="qty-val" type="number" min="0" id="qty-${CSS.escape(key)}" value="${qty}" oninput="setQty('${key.replace(/'/g,"\\'")}', this.value)">
             <button class="qty-btn" onclick="cambiarQty('${key.replace(/'/g,"\\'")}', 1)">+</button>
           </div>
           <select class="nota-input" onchange="cambiarNota('${key.replace(/'/g,"\\'")}', this.value)" style="margin-top:6px;font-size:11px;width:100%;border:1px solid #e5e5e5;border-radius:4px;padding:4px 4px;background:#fff;color:#555;">
