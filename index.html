@@ -162,6 +162,7 @@ footer a { color: #666; text-decoration: none; }
 </div>
 <div class="banner">Únicamente en efectivo o transferencia</div>
 <div style="background:#2c2c2a;color:#faf8f5;text-align:center;padding:10px 20px;font-size:13px;letter-spacing:0.02em;">Venta mayorista a partir de <strong>$150.000</strong></div>
+<div style="background:#f5f3ef;color:#666;text-align:center;padding:8px 20px;font-size:12px;letter-spacing:0.02em;border-bottom:1px solid #ebe9e4;">Los tiempos de entrega pueden variar entre 2 y 12 días hábiles según el pedido y volumen del mismo</div>
 
 <div class="search-bar"><input type="text" id="si" placeholder="Buscar producto o código..." oninput="render()"></div>
 <div class="filters">
@@ -365,10 +366,8 @@ const P = [
   {n:"Copa Champagne",c:"vidrio",ca:{cod:"7856",p:4200},li:{cod:"7856-L",p:3300},img:"img-copa-champ",url:"https://koken-art.com/productos/copa-champagne-peacook-190-cc"},
   {n:"Copón Gourmet Bombé",c:"vidrio",ca:{cod:"68871",p:3400},li:{cod:"68871-L",p:2300},img:"img-copon",url:"https://koken-art.com/productos/copon-gourmet-golden-blue-450-cc/"},
   {n:"Vaso Spa",c:"vidrio",ca:{cod:"61243",p:3400},li:{cod:"61243-L",p:2300},img:"https://i.imgur.com/UMPXU9q.jpg",url:"https://koken-art.com/productos/vaso-spa-peacook-425-cc/"},
-  {n:"Vaso Doble Vidrio 150ml",c:"vidrio",ca:{cod:"1139",p:3570},li:{cod:"1139-L",p:3800},img:"https://i.imgur.com/d4LEicu.jpg",url:"https://koken-art.com/productos/vaso-doble-vidrio-150ml1"},
-  {n:"Vaso Doble Vidrio 250ml",c:"vidrio",ca:{cod:"1127",p:3655},li:{cod:"1127-L",p:11200},img:"https://drive.google.com/thumbnail?id=1yT1beNGxs8lmA4m7ksKIwiEALu3kPxIF&sz=w400",url:"https://koken-art.com/productos/vaso-doble-vidrio-250ml1"},
-  {n:"Vaso Doble Vidrio 80ml",c:"vidrio",ca:{cod:"1128",p:2720},li:{cod:"1128-L",p:2900},img:"https://drive.google.com/thumbnail?id=1-PUB4CWauhU9b2zac9TFXGCC1ivHEgAv&sz=w400",url:"https://koken-art.com/productos/vaso-doble-vidrio-80ml1"},
-  {n:"Vaso Doble con Wave Ch",c:"vidrio",ca:{cod:"9915",p:4250},li:null,img:"https://i.imgur.com/aEN7opI.jpg",url:"https://koken-art.com/productos/vaso-doble-vidrio-wave-ch"},
+    {n:"Vaso Doble Vidrio 250ml",c:"vidrio",ca:{cod:"1127",p:3655},li:{cod:"1127-L",p:11200},img:"https://drive.google.com/thumbnail?id=1yT1beNGxs8lmA4m7ksKIwiEALu3kPxIF&sz=w400",url:"https://koken-art.com/productos/vaso-doble-vidrio-250ml1"},
+    {n:"Vaso Doble con Wave Ch",c:"vidrio",ca:{cod:"9915",p:4250},li:null,img:"https://i.imgur.com/aEN7opI.jpg",url:"https://koken-art.com/productos/vaso-doble-vidrio-wave-ch"},
   {n:"Vaso Doble con Wave Gr",c:"vidrio",ca:{cod:"9916",p:4250},li:null,img:"https://i.imgur.com/rVEqOXF.jpg",url:"https://koken-art.com/productos/vaso-doble-vidrio-wave-gr/"},
         // MADERA
   {n:"Posa Vaso Corazón",c:"madera",pack:6,ca:{cod:"3922-1",p:7200},li:null,img:"https://drive.google.com/thumbnail?id=1Ikc2GXERV7ewPfuD5KNP6g-j7Lpf8BgB&sz=w400",url:"https://koken-art.com/productos/posa-vaso-corazon-q52ri"},
@@ -606,6 +605,16 @@ function render(){
           </div>
           <select class="nota-input" onchange="cambiarNota('${key.replace(/'/g,"\\'")}', this.value)" style="margin-top:6px;font-size:11px;width:100%;border:1px solid #e5e5e5;border-radius:4px;padding:4px 4px;background:#fff;color:#555;">
             <option value="">Colección...</option>
+            ${cat === 'vidrio' ? `
+            <option value="Golden Blue Oro">Golden Blue Oro</option>
+            <option value="Golden Blue Blanco">Golden Blue Blanco</option>
+            <option value="Peacook Oro">Peacook Oro</option>
+            <option value="Peacook Blanco">Peacook Blanco</option>
+            <option value="Ginger Oro">Ginger Oro</option>
+            <option value="Ginger Blanco">Ginger Blanco</option>
+            <option value="Jungle Oro">Jungle Oro</option>
+            <option value="Jungle Blanco">Jungle Blanco</option>
+            ` : `
             <option value="Mix Surtido">Mix Surtido – lo elegimos nosotros</option>
             <option value="Surtido Personalizado">Surtido Personalizado – aclaralo en Notas</option>
             <option value="Golden Nest">Golden Nest</option>
@@ -623,6 +632,7 @@ function render(){
             <option value="Peacook">Peacook</option>
             <option value="Winter">Winter</option>
             <option value="Utopia">Utopia</option>
+            `}
           </select>
         </div>
       </div>`;
